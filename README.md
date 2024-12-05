@@ -10,7 +10,7 @@
 [![Contributors](https://img.shields.io/github/contributors/samber/go-safe-csv-writer)](https://github.com/samber/go-safe-csv-writer/graphs/contributors)
 [![License](https://img.shields.io/github/license/samber/go-safe-csv-writer)](./LICENSE)
 
-A fork of `encoding/csv` package from Go stdlib, preventing CSV injection and data exfiltration, while maintaining compatibility with the original library.
+A fork of `encoding/csv` (go v1.23.4) package from Go stdlib, preventing CSV injection and data exfiltration, while maintaining compatibility with the original library.
 
 ## 🥷 Attack vector
 
