@@ -2,7 +2,7 @@
 # Safe CSV writer
 
 [![tag](https://img.shields.io/github/tag/samber/go-safe-csv-writer.svg)](https://github.com/samber/go-safe-csv-writer/releases)
-![Go Version](https://img.shields.io/badge/Go-%3E%3D%201.16-%23007d9c)
+![Go Version](https://img.shields.io/badge/Go-%3E%3D%201.17-%23007d9c)
 [![GoDoc](https://godoc.org/github.com/samber/go-safe-csv-writer?status.svg)](https://pkg.go.dev/github.com/samber/go-safe-csv-writer)
 ![Build Status](https://github.com/samber/go-safe-csv-writer/actions/workflows/test.yml/badge.svg)
 [![Go report](https://goreportcard.com/badge/github.com/samber/go-safe-csv-writer)](https://goreportcard.com/report/github.com/samber/go-safe-csv-writer)
