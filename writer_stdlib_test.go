@@ -73,7 +73,7 @@ func (e errorWriter) Write(b []byte) (int, error) {
 func TestError(t *testing.T) {
 	b := &bytes.Buffer{}
 	f := NewSafeWriter(b, SafetyOpts{})
-	f.Write([]string{"abc"})
+	must(f.Write([]string{"abc"}))
 	f.Flush()
 	err := f.Error()
 
@@ -82,7 +82,7 @@ func TestError(t *testing.T) {
 	}
 
 	f = NewSafeWriter(errorWriter{}, SafetyOpts{})
-	f.Write([]string{"abc"})
+	must(f.Write([]string{"abc"}))
 	f.Flush()
 	err = f.Error()
 

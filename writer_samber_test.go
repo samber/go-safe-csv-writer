@@ -7,12 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func must(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 func buildTest(forceDoubleQuotes bool, escapeCharEqual bool, escapeCharPlus bool, escapeCharMinus bool, escapeCharAt bool, escapeCharTab bool, escapeCharCR bool) string {
 	var buff strings.Builder
 
