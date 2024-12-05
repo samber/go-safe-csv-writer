@@ -7,6 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func buildTest(forceDoubleQuotes bool, escapeCharEqual bool, escapeCharPlus bool, escapeCharMinus bool, escapeCharAt bool, escapeCharTab bool, escapeCharCR bool) string {
 	var buff strings.Builder
 
@@ -22,14 +28,12 @@ func buildTest(forceDoubleQuotes bool, escapeCharEqual bool, escapeCharPlus bool
 			EscapeCharCR:      escapeCharCR,
 		},
 	)
-	writer.Write([]string{"userId", "secret", "comment"})
-	writer.Write([]string{"-21+63", "=A1", "foo, bar"})
-	writer.Write([]string{"+42", "\tsecret", "\nplop"})
-	writer.Write([]string{"123", "blablabla", "@foobar"})
+	must(writer.Write([]string{"userId", "secret", "comment"}))
+	must(writer.Write([]string{"-21+63", "=A1", "foo, bar"}))
+	must(writer.Write([]string{"+42", "\tsecret", "\nplop"}))
+	must(writer.Write([]string{"123", "blablabla", "@foobar"}))
 	writer.Flush()
-	if err := writer.Error(); err != nil {
-		panic(err)
-	}
+	must(writer.Error())
 
 	return buff.String()
 }

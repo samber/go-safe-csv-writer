@@ -15,14 +15,12 @@ type writer interface {
 }
 
 func writeToWriter(w writer) {
-	w.Write([]string{"userId", "secret", "comment"})
-	w.Write([]string{"-21+63", "=A1", "foo, bar"})
-	w.Write([]string{"+42", "\tsecret", "\nplop"})
-	w.Write([]string{"123", "blablabla", "@foobar"})
+	must(w.Write([]string{"userId", "secret", "comment"}))
+	must(w.Write([]string{"-21+63", "=A1", "foo, bar"}))
+	must(w.Write([]string{"+42", "\tsecret", "\nplop"}))
+	must(w.Write([]string{"123", "blablabla", "@foobar"}))
 	w.Flush()
-	if err := w.Error(); err != nil {
-		panic(err)
-	}
+	must(w.Error())
 }
 
 func unsafe() string {
