@@ -170,7 +170,7 @@ func (w *SafeWriter) Write(record []string) error {
 // Flush writes any buffered data to the underlying [io.Writer].
 // To check if an error occurred during Flush, call [SafeWriter.Error].
 func (w *SafeWriter) Flush() {
-	w.w.Flush()
+	_ = w.w.Flush()
 }
 
 // Error reports any error that has occurred during
