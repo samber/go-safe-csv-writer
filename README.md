@@ -1,4 +1,3 @@
-
 # Safe CSV writer
 
 [![tag](https://img.shields.io/github/tag/samber/go-safe-csv-writer.svg)](https://github.com/samber/go-safe-csv-writer/releases)
@@ -49,6 +48,21 @@ See [https://georgemauer.net/2017/10/07/csv-injection.html](https://georgemauer.
 
 and [https://owasp.org/www-community/attacks/CSV_Injection](https://owasp.org/www-community/attacks/CSV_Injection)
 
+### OWASP-Compliant Protection
+
+This library now supports **OWASP-compliant CSV injection prevention** using the recommended sanitization approach:
+
+- Wraps all fields in double quotes
+- Prepends a single quote (`'`) to dangerous fields only (not all fields)
+- Escapes double quotes using an additional double quote
+
+**Dangerous fields** are detected when:
+
+1. Field starts with dangerous characters: `=`, `+`, `-`, `@`, `\t`, `\r`, `\n`
+2. Field contains bypass patterns: quote/separator followed by dangerous character (e.g., `","=`, `";"=`)
+
+This approach protects against both direct formula injection and bypass attacks via embedded separators/quotes, while avoiding unnecessary data pollution of safe fields.
+
 ## 🚀 Install
 
 ```sh
@@ -69,13 +83,8 @@ import csv "github.com/samber/go-safe-csv-writer"
 func main() {
     var buff strings.Builder
 
-    writer := csv.NewSafeWriter(
-        &buff,
-        &SafetyOpts{
-            ForceDoubleQuotes: true,
-            EscapeCharEqual:   true,
-        },
-    )
+    // OWASP-compliant mode (recommended)
+    writer := csv.NewSafeWriter(&buff, csv.OWASPSafe)
     writer.Write([]string{"userId", "secret", "comment"})
     writer.Write([]string{"-21+63", "=A1", "foo, bar"})
     writer.Flush()
@@ -86,8 +95,20 @@ func main() {
 
     output := buff.String()
     // "userId","secret","comment"
-    // "-21+63"," =A1","foo, bar"
+    // "'-21+63","'=A1","foo, bar"
 }
+```
+
+Or with custom options:
+
+```go
+writer := csv.NewSafeWriter(
+    &buff,
+    csv.SafetyOpts{
+        ForceDoubleQuotes: true,
+        EscapeCharEqual:   true,
+    },
+)
 ```
 
 ## 🍱 Reference
@@ -107,12 +128,23 @@ type SafetyOpts struct {
     EscapeCharMinus   bool
     EscapeCharAt      bool
     EscapeCharTab     bool
-    EscapeCharCR      bool
+    EscapeCharCR      bool // Escapes 0x0D (Carriage Return, '\r')
+    EscapeCharLF      bool // Escapes 0x0A (Line Feed, '\n')
+    PrependSingleQuote bool // Prepend single quote to dangerous fields only
 }
 ```
 
 ```go
 // Presets:
+
+// OWASPSafe provides OWASP-compliant CSV injection prevention.
+// It wraps all fields in double quotes and prepends a single quote
+// to fields that contain dangerous characters or bypass patterns.
+// See https://owasp.org/www-community/attacks/CSV_Injection
+var OWASPSafe = SafetyOpts{
+	ForceDoubleQuotes: true,
+	PrependSingleQuote: true,
+}
 
 var FullSafety = SafetyOpts{
 	ForceDoubleQuotes: true,
@@ -122,6 +154,8 @@ var FullSafety = SafetyOpts{
 	EscapeCharAt:      true,
 	EscapeCharTab:     true,
 	EscapeCharCR:      true,
+	EscapeCharLF:      true,
+	PrependSingleQuote: false,
 }
 
 var EscapeAll = SafetyOpts{
@@ -132,6 +166,8 @@ var EscapeAll = SafetyOpts{
 	EscapeCharAt:      true,
 	EscapeCharTab:     true,
 	EscapeCharCR:      true,
+	EscapeCharLF:      true,
+	PrependSingleQuote: false,
 }
 ```
 
